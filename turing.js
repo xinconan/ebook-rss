@@ -11,7 +11,8 @@ const getNewBooks = async function() {
   const books = []
   list.each((i, item) => {
     const book = $(item).find('.book-img a')[0]
-    const href = $(book).attr('href')
+    // full path
+    const href = 'http://www.ituring.com.cn' + $(book).attr('href')
     books[i] = {
       title: $(book).attr('title'),
       href,
