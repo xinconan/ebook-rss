@@ -1,22 +1,30 @@
 const fs = require('fs');
 const ini = require('ini');
 const turingApi = require('./turing')
+const epubApi = require('./epub')
 const { sendWx } = require('./notify')
 
 const configPath = './config.ini';
 
 const config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
-console.log(config)
 
 const getBooks = async function(){
   try {
     const turingBooks = await turingApi.getNewBooks();
     const newTuringBooks = getNews(turingBooks, config.turing.id)
-    console.log(newTuringBooks)
-    if (newTuringBooks.length) {
+    const epubBooks = await epubApi.getNewBooks();
+    const newEpubBooks = getNews(epubBooks, config.epub.id)
+    const newBooks = [...newTuringBooks, ...newEpubBooks]
+    if (newBooks.length) {
       // 取最新的更新配置
-      sendWx(newTuringBooks)
-      config.turing.id = newTuringBooks[0].id;
+      sendWx(newBooks)
+      if (newTuringBooks.length) {
+        config.turing.id = newTuringBooks[0].id;
+      }
+      if (newEpubBooks.length) {
+        config.epub.id = newEpubBooks[0].id;
+      }
+      fs.writeFileSync(configPath, ini.stringify(config))
     }
   } catch (error) {
     // error
@@ -38,5 +46,3 @@ const getNews = function(books, latestId) {
 }
 
 getBooks();
-// config.epubit.id = '2345'
-// fs.writeFileSync(configPath, ini.stringify(config))
