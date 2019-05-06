@@ -1,6 +1,7 @@
 const axios = require('axios');
 const qs = require('querystring')
 const { serverApi } = require('./config')
+const { log } = require('./utils')
 
 const getMD = function(books) {
   let str = ''
@@ -19,10 +20,10 @@ const sendWx = async function(books) {
   try {
     const {status, data} = await axios.post(`https://sc.ftqq.com/${serverApi}.send`, qs.stringify(params))
     if (status === 200) {
-      console.log('通知成功')
+      log('电子书有更新，通知成功')
     }
   } catch (error) {
-    console.log(error)
+    log(error)
   }
 }
 

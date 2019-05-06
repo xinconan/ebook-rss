@@ -1,14 +1,18 @@
 const fs = require('fs');
 const ini = require('ini');
+const Git = require('simple-git')
+const path = require('path')
 const turingApi = require('./turing')
 const epubApi = require('./epub')
 const { sendWx } = require('./notify')
+const { log } = require('./utils')
 
 const configPath = './config.ini';
-
-const config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
+// git path
+const RESP_PATH = path.join('./')
 
 const getBooks = async function(){
+  const config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
   try {
     const turingBooks = await turingApi.getNewBooks();
     const newTuringBooks = getNews(turingBooks, config.turing.id)
@@ -25,10 +29,12 @@ const getBooks = async function(){
         config.epub.id = newEpubBooks[0].id;
       }
       fs.writeFileSync(configPath, ini.stringify(config))
+    } else {
+      log('没有更新')
     }
   } catch (error) {
     // error
-    console.log(error)
+    log(error)
   }
 }
 
@@ -45,4 +51,22 @@ const getNews = function(books, latestId) {
   return newBooks
 }
 
-getBooks();
+// 更新
+function update() {
+  log('开始更新')
+
+  Git(RESP_PATH)
+    .pull()
+    .exec(getBooks)
+}
+
+function commit() {
+  log('开始上传更新')
+
+  Git(RESP_PATH)
+    .add('./*')
+    .commit('update lastest book id')
+    .push(['-u', 'origin', 'master'], () => log('完成更新和上传！'));
+}
+
+module.exports = update

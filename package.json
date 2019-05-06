@@ -1,0 +1,31 @@
+{
+  "name": "ebook-rss",
+  "version": "1.0.0",
+  "description": "ebooks update rss for ituring and epubit",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xinconan/ebook-rss.git"
+  },
+  "keywords": [
+    "ebook",
+    "rss"
+  ],
+  "author": "xinconan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xinconan/ebook-rss/issues"
+  },
+  "homepage": "https://github.com/xinconan/ebook-rss#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.3",
+    "dayjs": "^1.8.13",
+    "ini": "^1.3.5",
+    "node-schedule": "^1.3.2",
+    "simple-git": "^1.112.0"
+  }
+}
