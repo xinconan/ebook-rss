@@ -64,7 +64,7 @@ function commit() {
   log('开始上传更新')
 
   Git(RESP_PATH)
-    .add('./*')
+    .add('./config.ini')
     .commit('update lastest book id')
     .push(['-u', 'origin', 'master'], () => log('完成更新和上传！'));
 }
