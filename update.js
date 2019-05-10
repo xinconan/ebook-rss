@@ -29,6 +29,7 @@ const getBooks = async function(){
         config.epub.id = newEpubBooks[0].id;
       }
       fs.writeFileSync(configPath, ini.stringify(config))
+      commit();
     } else {
       log('没有更新')
     }
