@@ -19,7 +19,7 @@ const sendWx = async function (books, text) {
 
   try {
     const { status, data } = await axios.post(
-      `https://sc.ftqq.com/${serverApi}.send`,
+      `https://sctapi.ftqq.com/${serverApi}.send`,
       qs.stringify(params)
     );
     if (status === 200) {
