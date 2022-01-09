@@ -1,10 +1,10 @@
-const axios = require("axios");
-const qs = require("querystring");
-const { serverApi } = require("./config");
-const { log } = require("./utils");
+const axios = require('axios');
+const qs = require('querystring');
+const { serverApi, pushPlus } = require('./config');
+const { log } = require('./utils');
 
 const getMD = function (books) {
-  let str = "";
+  let str = '';
   for (let i = 0; i < books.length; i++) {
     str += `- [${books[i].title}](${books[i].href})\r\n`;
   }
@@ -30,6 +30,24 @@ const sendWx = async function (books, text) {
   }
 };
 
+const sendPlus = async function (text) {
+  try {
+    const { status } = await axios.post('http://www.pushplus.plus/send', {
+      token: pushPlus,
+      content: text,
+      template: 'markdown',
+      title: '汇率有更新啦',
+      topic: 'jpy',
+    });
+    if (status === 200) {
+      log('汇率更新通知成功。', text);
+    }
+  } catch (e) {
+    log(e);
+  }
+};
+
 module.exports = {
   sendWx,
+  sendPlus,
 };

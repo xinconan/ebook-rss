@@ -4,8 +4,9 @@ const Git = require('simple-git');
 const path = require('path');
 const turingApi = require('./turing');
 // const epubApi = require('./epub')
-const { sendWx } = require('./notify');
+const { sendWx, sendPlus } = require('./notify');
 const { log } = require('./utils');
+const { getJPYFee } = require('./fee');
 
 const configPath = './config.ini';
 // git path
@@ -60,6 +61,16 @@ const getBooks = async function () {
     // error
     log(error);
   }
+
+  getJPYFee().then((data) => {
+    log(JSON.stringify(data));
+    if (data.fee) {
+      if (Number(data.fee) * 10000 >= Number(config.fee.jpy)) {
+        const feeContent = `最新汇率：${data.fee}\n更新时间：${data.time}`;
+        sendPlus(feeContent);
+      }
+    }
+  });
 };
 
 // 和之前的id对比，获取最新的条目
