@@ -1,2 +1,2 @@
 const update = require('./update')
-update()
+update(false)
